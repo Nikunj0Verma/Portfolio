@@ -74,7 +74,7 @@ const About = () => {
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <a
-              href="https://drive.google.com/file/d/1bck8wM5rO8EGZ0Dol3zASJp13TPnzaKC/view"
+              href="https://drive.google.com/file/d/1CJffmG1tXJ2pY5laWOICDmPuzOAApWxb/view"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block text-white py-3 px-8 rounded-full text-lg font-bold transition transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-500/30 mb-9"
