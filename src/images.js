@@ -96,8 +96,7 @@ export const SkillsInfo = [
     img: rkgitmlogo,
     school: "Raj Kumar Goel Institute of Technology and Management, Ghaziabad, Uttar Pradesh",
     date: "Sept 2024 - Present",
-    grade_1st: "CGPA",
-    grade_2st: "CGPA",
+    grade: "8.11 CGPA",
     degree: "Bachelor of Technology (B.Tech) in Computer Science and Engineering",
     desc: "Currently pursuing a Bachelor of Technology in Computer Science and Engineering. My coursework focuses on Data Structures & Algorithms, Object-Oriented Programming, Database Management Systems, Operating Systems, Computer Networks, Software Engineering, and Web Development. Alongside academics, I actively build full-stack web applications, solve DSA problems, and continuously strengthen my software development skills through personal projects and hands-on learning."
   },
@@ -107,7 +106,7 @@ export const SkillsInfo = [
     img: gbssslogo,
     school: "Government Boys Senior Secondary School, Shahdara, Delhi",
     date: "Apr 2021 - Mar 2023",
-    grade: "",
+    grade: "80.17%",
     degree: "CBSE (Class XII) - PCM with Computer Science",
     desc: "Completed Higher Secondary Education under the CBSE curriculum with Physics, Chemistry, Mathematics, and Computer Science. This academic foundation strengthened my analytical thinking, mathematical skills, and problem-solving abilities while introducing me to programming concepts and computational logic."
   },
@@ -117,7 +116,7 @@ export const SkillsInfo = [
     img: spssslogo,
     school: "Shashi Public Senior Secondary School, Shahdara, Delhi",
     date: "Apr 2020 - Mar 2021",
-    grade: "",
+    grade: "85.67%",
     degree: "CBSE (Class X)",
     desc: "Completed Secondary Education under the CBSE curriculum with a strong academic foundation in Science, Mathematics, English, and Information Technology. This stage developed my curiosity for technology and laid the groundwork for pursuing Computer Science."
   }
