@@ -1,0 +1,181 @@
+import React, { useState, useEffect } from "react";
+import { projects } from '../images'
+
+const Work = () => {
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [hoveredTagId, setHoveredTagId] = useState(null);
+
+  const handleOpenModal = (project) => {
+    setSelectedProject(project);
+    document.body.style.overflow = 'hidden';
+    const navbar = document.querySelector('nav');
+    if (navbar) navbar.style.display = 'none';
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProject(null);
+    document.body.style.overflow = 'auto';
+    const navbar = document.querySelector('nav');
+    if (navbar) navbar.style.display = 'block';
+  };
+
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'auto';
+      const navbar = document.querySelector('nav');
+      if (navbar) navbar.style.display = 'block';
+    };
+  }, []);
+
+  return (
+    <section
+      id="work"
+      className="py-24 pb-24 px-[12vw] md:px-[7vw] lg:px-[15vw] font-sans relative"
+    >
+      <div className="text-center mb-16">
+        <h2 className="text-4xl font-bold text-white">Featured Projects</h2>
+        <div className="w-80 h-1 bg-purple-500 mx-auto mt-4 mb-8"></div>
+        <p className="text-gray-400 mt-4 text-lg font-semibold">
+          A collection of full-stack and front-end applications built with React, Next.js, Node.js, Express.js, MongoDB, and modern web technologies.
+        </p>
+      </div>
+
+
+      <div className="grid gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ">
+        {projects.map((project) => (
+          <div
+          key={project.id}
+          onClick={() => handleOpenModal(project)}
+          className="border border-gray-400 bg-gray-900 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden cursor-pointer hover:shadow-purple-500/50 hover:-translate-y-2 transition-transform duration-300"
+          >
+            <div className="p-4">
+              <img
+                src={project.image}
+                alt={project.title}
+                className="w-full h-48 object-cover rounded-xl aspect-video"
+                />
+            </div>
+            <div className="p-6">
+              <h3 className="text-2xl font-bold text-white mb-2">
+                {project.title}
+              </h3>
+              <p className="text-gray-500 mb-4 pt-4 line-clamp-3">
+                {project.description}
+              </p>
+              <div 
+                className="mb-4 relative"
+                onMouseEnter={() => setHoveredTagId(project.id)}
+                onMouseLeave={() => setHoveredTagId(null)}
+              >
+                {hoveredTagId === project.id ? (
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="inline-block bg-[#251f38] text-xs font-semibold text-purple-500 rounded-full px-2 py-1"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <div>
+                    {project.tags.slice(0, 4).map((tag, index) => (
+                      <span
+                        key={index}
+                        className="inline-block bg-[#251f38] text-xs font-semibold text-purple-500 rounded-full px-2 py-1 mr-2 mb-2"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    
+                    {project.tags.length > 4 && (
+                      <span className="inline-block bg-[#251f38] text-xs font-semibold text-white rounded-full px-2 py-1 mr-2 mb-2">
+                        +{project.tags.length - 4}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+
+      <div className="flex justify-center mt-16 mb-15">
+        <a
+          href="https://github.com/Nikunj0Verma"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-purple-600 hover:bg-purple-800 text-white font-bold py-2 px-5 rounded-xl lg:text-lg text-[15px]  transition-colors duration-300"
+        >
+          More Projects →
+        </a>
+      </div>
+
+      {selectedProject && (
+        <>
+
+          <div 
+            className="fixed inset-0 z-40 bg-black bg-opacity-90"
+            onClick={handleCloseModal}
+          ></div>
+          
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="bg-gray-900 rounded-xl shadow-2xl h-[80%] lg:w-full w-[90%] max-w-[530px] overflow-auto relative">
+              <div className="flex justify-end p-4">
+                <button
+                  onClick={handleCloseModal}
+                  className="text-white text-3xl font-bold hover:text-purple-500 cursor-pointer"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <div className="flex flex-col">
+                <div className="w-full flex justify-center bg-gray-900 px-4">
+                  <img
+                    src={selectedProject.image}
+                    alt={selectedProject.title}
+                    className="lg:w-full w-[95%] object-contain rounded-xl shadow-2xl"
+                  />
+                </div>
+                <div className="lg:p-8 p-6">
+                  <h3 className="lg:text-3xl font-bold text-white mb-4 text-md">
+                    {selectedProject.title}
+                  </h3>
+                  <p className="text-gray-400 mb-6 lg:text-base text-xs">
+                    {selectedProject.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {selectedProject.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="bg-[#251f38] text-xs font-semibold text-purple-500 rounded-full px-2 py-1"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-4">
+                    <a
+                      href={selectedProject.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-[100%] bg-gray-800 hover:bg-purple-800 text-gray-400 lg:px-6 lg:py-2 px-2 py-1 rounded-xl lg:text-xl text-sm font-semibold text-center"
+                    >
+                      View Code
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </section>
+  );
+};
+
+export default Work;
