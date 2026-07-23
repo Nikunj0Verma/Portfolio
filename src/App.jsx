@@ -8,6 +8,7 @@ import Navbar from './components/Navbar'
 import Work from './components/Work'
 import Skills from './components/Skills'
 import BlurBlob from './components/BlurBlob'
+import { Analytics } from "@vercel/analytics/next"
 function App() {
   return (
     <>
