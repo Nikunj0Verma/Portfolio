@@ -38,6 +38,7 @@ function App() {
         </div>
             <Footer/>
           </div>
+          <Analytics />
       </div>
     </>
   )
