@@ -1,69 +1,106 @@
-import React, { useState, useEffect } from "react";
-import { projects } from '../images'
+import React, { useEffect, useRef, useState } from "react";
+import { projects } from "../images";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Work = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [hoveredTagId, setHoveredTagId] = useState(null);
-
+  const modalRef = useRef(null);
+  
   const handleOpenModal = (project) => {
     setSelectedProject(project);
-    document.body.style.overflow = 'hidden';
-    const navbar = document.querySelector('nav');
-    if (navbar) navbar.style.display = 'none';
   };
-
+  
   const handleCloseModal = () => {
-    setSelectedProject(null);
-    document.body.style.overflow = 'auto';
-    const navbar = document.querySelector('nav');
-    if (navbar) navbar.style.display = 'block';
+  setSelectedProject(null);
+};
+
+useEffect(() => {
+  if (!selectedProject) return;
+
+  const body = document.body;
+  const html = document.documentElement;
+  const previousBodyOverflow = body.style.overflow;
+  const previousHtmlOverflow = html.style.overflow;
+
+  const navbarElements = document.querySelectorAll(
+    "header, nav, [role='navigation'], .navbar, #navbar"
+  );
+  const previousNavbarStyles = Array.from(navbarElements, (element) => ({
+    element,
+    display: element.style.getPropertyValue("display"),
+    priority: element.style.getPropertyPriority("display"),
+  }));
+
+  body.style.overflow = "hidden";
+  html.style.overflow = "hidden";
+
+  navbarElements.forEach((element) => {
+    element.style.setProperty("display", "none", "important");
+  });
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") handleCloseModal();
   };
 
-  useEffect(() => {
-    return () => {
-      document.body.style.overflow = 'auto';
-      const navbar = document.querySelector('nav');
-      if (navbar) navbar.style.display = 'block';
-    };
-  }, []);
+  window.addEventListener("keydown", handleKeyDown);
+  modalRef.current?.focus();
 
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+
+    body.style.overflow = previousBodyOverflow;
+    html.style.overflow = previousHtmlOverflow;
+
+    previousNavbarStyles.forEach(({ element, display, priority }) => {
+      if (display) {
+        element.style.setProperty("display", display, priority);
+      } else {
+        element.style.removeProperty("display");
+      }
+    });
+  };
+}, [selectedProject]);
   return (
     <section
       id="work"
-      className="py-24 pb-24 px-[12vw] md:px-[7vw] lg:px-[15vw] font-sans relative"
+      className="relative px-[12vw] py-24 pb-24 font-sans md:px-[7vw] lg:px-[15vw]"
     >
-      <div className="text-center mb-16">
+      <div className="mb-16 text-center">
         <h2 className="text-4xl font-bold text-white">Featured Projects</h2>
-        <div className="w-80 h-1 bg-purple-500 mx-auto mt-4 mb-8"></div>
-        <p className="text-gray-400 mt-4 text-lg font-semibold">
-          A collection of full-stack and front-end applications built with React, Next.js, Node.js, Express.js, MongoDB, and modern web technologies.
+        <div className="mx-auto mb-8 mt-4 h-1 w-80 bg-purple-500" />
+        <p className="mt-4 text-lg font-semibold text-gray-400">
+          A collection of full-stack and front-end applications built with
+          React, Next.js, Node.js, Express.js, MongoDB, and modern web
+          technologies.
         </p>
       </div>
 
-
-      <div className="grid gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ">
+      <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
           <div
-          key={project.id}
-          onClick={() => handleOpenModal(project)}
-          className="border border-gray-400 bg-gray-900 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden cursor-pointer hover:shadow-purple-500/50 hover:-translate-y-2 transition-transform duration-300"
+            key={project.id}
+            onClick={() => handleOpenModal(project)}
+            className="cursor-pointer overflow-hidden rounded-2xl border border-gray-400 bg-gray-900 shadow-2xl backdrop-blur-md transition-transform duration-300 hover:-translate-y-2 hover:shadow-purple-500/50"
           >
             <div className="p-4">
               <img
                 src={project.image}
                 alt={project.title}
-                className="w-full h-48 object-cover rounded-xl aspect-video"
-                />
+                className="aspect-video h-48 w-full rounded-xl object-cover"
+              />
             </div>
+
             <div className="p-6">
-              <h3 className="text-2xl font-bold text-white mb-2">
+              <h3 className="mb-2 text-2xl font-bold text-white">
                 {project.title}
               </h3>
-              <p className="text-gray-500 mb-4 pt-4 line-clamp-3">
+              <p className="mb-4 line-clamp-3 pt-4 text-gray-500">
                 {project.description}
               </p>
-              <div 
-                className="mb-4 relative"
+
+              <div
+                className="relative mb-4"
                 onMouseEnter={() => setHoveredTagId(project.id)}
                 onMouseLeave={() => setHoveredTagId(null)}
               >
@@ -72,7 +109,7 @@ const Work = () => {
                     {project.tags.map((tag, index) => (
                       <span
                         key={index}
-                        className="inline-block bg-[#251f38] text-xs font-semibold text-purple-500 rounded-full px-2 py-1"
+                        className="inline-block rounded-full bg-[#251f38] px-2 py-1 text-xs font-semibold text-purple-500"
                       >
                         {tag}
                       </span>
@@ -83,14 +120,14 @@ const Work = () => {
                     {project.tags.slice(0, 4).map((tag, index) => (
                       <span
                         key={index}
-                        className="inline-block bg-[#251f38] text-xs font-semibold text-purple-500 rounded-full px-2 py-1 mr-2 mb-2"
+                        className="mr-2 mb-2 inline-block rounded-full bg-[#251f38] px-2 py-1 text-xs font-semibold text-purple-500"
                       >
                         {tag}
                       </span>
                     ))}
-                    
+
                     {project.tags.length > 4 && (
-                      <span className="inline-block bg-[#251f38] text-xs font-semibold text-white rounded-full px-2 py-1 mr-2 mb-2">
+                      <span className="mr-2 mb-2 inline-block rounded-full bg-[#251f38] px-2 py-1 text-xs font-semibold text-white">
                         +{project.tags.length - 4}
                       </span>
                     )}
@@ -102,77 +139,100 @@ const Work = () => {
         ))}
       </div>
 
-
-      <div className="flex justify-center mt-16 mb-15">
+      <div className="mt-16 mb-15 flex justify-center">
         <a
           href="https://github.com/Nikunj0Verma"
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-purple-600 hover:bg-purple-800 text-white font-bold py-2 px-5 rounded-xl lg:text-lg text-[15px]  transition-colors duration-300"
+          className="rounded-xl bg-purple-600 px-5 py-2 text-[15px] font-bold text-white transition-colors duration-300 hover:bg-purple-800 lg:text-lg"
         >
           More Projects →
         </a>
       </div>
 
       {selectedProject && (
-        <>
+        <div
+  className="fixed inset-0 z-50 flex items-center justify-center"
+  onClick={handleCloseModal}
+>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-black/60 backdrop-blur-xl"
+          />
 
-          <div 
-            className="fixed inset-0 z-40 bg-black bg-opacity-90"
-            onClick={handleCloseModal}
-          ></div>
-          
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="bg-gray-900 rounded-xl shadow-2xl h-[80%] lg:w-full w-[90%] max-w-[530px] overflow-auto relative">
-              <div className="flex justify-end p-4">
-                <button
-                  onClick={handleCloseModal}
-                  className="text-white text-3xl font-bold hover:text-purple-500 cursor-pointer"
-                >
-                  &times;
-                </button>
+          <div
+            ref={modalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-modal-title"
+            tabIndex={-1}
+            onClick={(event) => event.stopPropagation()}
+            className="relative h-[80%] w-[90%] max-w-[630px] overflow-auto rounded-xl bg-gray-900 shadow-2xl outline-none lg:w-full h-[500px] md:h-[700px] lg:h-[740px]"
+          >
+            <div className="flex justify-end p-4">
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                aria-label="Close project details"
+                className="cursor-pointer text-3xl font-bold text-white hover:text-purple-500"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className="flex flex-col">
+              <div className="flex w-full justify-center bg-gray-900 px-4">
+                <img
+                  src={selectedProject.image}
+                  alt={selectedProject.title}
+                  className="w-[95%] rounded-xl object-contain shadow-2xl lg:w-full"
+                />
               </div>
 
-              <div className="flex flex-col">
-                <div className="w-full flex justify-center bg-gray-900 px-4">
-                  <img
-                    src={selectedProject.image}
-                    alt={selectedProject.title}
-                    className="lg:w-full w-[95%] object-contain rounded-xl shadow-2xl"
-                  />
-                </div>
-                <div className="lg:p-8 p-6">
-                  <h3 className="lg:text-3xl font-bold text-white mb-4 text-md">
-                    {selectedProject.title}
-                  </h3>
-                  <p className="text-gray-400 mb-6 lg:text-base text-xs">
-                    {selectedProject.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {selectedProject.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="bg-[#251f38] text-xs font-semibold text-purple-500 rounded-full px-2 py-1"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex gap-4">
-                    <a
-                      href={selectedProject.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-[100%] bg-gray-800 hover:bg-purple-800 text-gray-400 lg:px-6 lg:py-2 px-2 py-1 rounded-xl lg:text-xl text-sm font-semibold text-center"
+              <div className="p-6 lg:p-8">
+                <h3
+                  id="project-modal-title"
+                  className="mb-4 text-md font-bold text-white lg:text-3xl"
+                >
+                  {selectedProject.title}
+                </h3>
+                <p className="mb-6 text-xs text-gray-400 lg:text-base">
+                  {selectedProject.description}
+                </p>
+
+                <div className="mb-6 flex flex-wrap gap-2">
+                  {selectedProject.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="rounded-full bg-[#251f38] px-2 py-1 text-xs font-semibold text-purple-500"
                     >
-                      View Code
-                    </a>
-                  </div>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex gap-4">
+                  <a
+                    href={selectedProject.webpage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full rounded-xl bg-gray-800 px-2 py-1 text-center text-sm font-semibold text-gray-400 hover:bg-green-800 lg:px-6 lg:py-2 lg:text-xl"
+                  >
+                    Watch Live
+                  </a>
+                  <a
+                    href={selectedProject.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full rounded-xl bg-gray-800 px-2 py-1 text-center text-sm font-semibold text-gray-400 hover:bg-purple-800 lg:px-6 lg:py-2 lg:text-xl"
+                  >
+                    View Code
+                  </a>
                 </div>
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
     </section>
   );
